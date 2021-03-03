@@ -26,6 +26,9 @@
 *.a
 *.lib
 
+# CMake generated files
+cmake-build-debug/
+
 # Executables
 *.exe
 *.out
