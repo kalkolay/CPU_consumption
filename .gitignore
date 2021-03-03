@@ -26,8 +26,9 @@
 *.a
 *.lib
 
-# CMake generated files
+# CMake & CLion generated files
 cmake-build-debug/
+*.xml
 
 # Executables
 *.exe
