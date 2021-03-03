@@ -28,7 +28,7 @@
 
 # CMake & CLion generated files
 cmake-build-debug/
-*.xml
+.idea/
 
 # Executables
 *.exe
