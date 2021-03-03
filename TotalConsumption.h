@@ -9,8 +9,12 @@
 class TotalConsumption : public BaseWorker
 {
 public:
-
+    TotalConsumption();
+    double getCurrentValue() override;
 
 private:
+    unsigned long long _previousTotalTicks;
+    unsigned long long _previousIdleTicks;
 
+    float calculate(unsigned long long, unsigned long long);
 };

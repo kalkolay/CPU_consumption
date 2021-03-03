@@ -6,9 +6,14 @@
 
 #include "Shader.h"
 
+#include <string>
+
 class BaseWorker
 {
 public:
+
+
+    virtual double getCurrentValue() = 0;
 
 
 private:
