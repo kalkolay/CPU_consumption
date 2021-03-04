@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Create Build Environment
+      # Create a separate build directory
+      # We'll use this as our working directory for all subsequent commands
+      run: cmake -E make_directory ${{github.workspace}}/build
+
+    - name: Configure CMake
+      # Use a bash shell so we can use the same syntax for environment variable
+      # access regardless of the host operating system
+      shell: bash
+      working-directory: ${{github.workspace}}/build
+      # Generate Makefile
+      run: cmake -G "Unix Makefiles" ..
+
+    - name: Build
+      # Build the project via Makefile
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: make
