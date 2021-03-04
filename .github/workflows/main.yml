@@ -20,8 +20,6 @@ jobs:
       # access regardless of the host operating system
       shell: bash
       working-directory: ${{github.workspace}}/build
-      
-    - name: Run CMake
       # Generate Makefile
       run: cmake -G "Unix Makefiles" ..
 
