@@ -6,10 +6,12 @@
 
 #include <mach/mach.h>
 
-TotalConsumption::TotalConsumption()
+TotalConsumption::TotalConsumption(const struct Rect& currentArea)
     : _previousIdleTicks(0), _previousTotalTicks(0)
 {
+    _area = currentArea;
 
+    initializeShaderData();
 }
 
 float TotalConsumption::calculate(unsigned long long idleTicks,

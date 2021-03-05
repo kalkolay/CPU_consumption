@@ -9,7 +9,7 @@
 class TotalConsumption : public BaseWorker
 {
 public:
-    TotalConsumption();
+    TotalConsumption(const struct Rect&);
     double getCurrentValue() override;
 
 private:

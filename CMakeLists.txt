@@ -7,7 +7,7 @@ add_executable(CPU_consumption
         main.cpp
         Constants.h
         Shader.cpp
-        Shader.h BaseWorker.cpp BaseWorker.h TotalConsumption.cpp TotalConsumption.h CoresConsumption.cpp CoresConsumption.h)
+        Shader.h BaseWorker.cpp BaseWorker.h TotalConsumption.cpp TotalConsumption.h CoresConsumption.cpp CoresConsumption.h Container.h)
 
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)

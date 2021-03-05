@@ -17,7 +17,7 @@ class CoresConsumption : public BaseWorker
     } core_info_t;
 
 public:
-    explicit CoresConsumption(int);
+    explicit CoresConsumption(int, const Rect&);
     ~CoresConsumption();
     double getCurrentValue() override;
 

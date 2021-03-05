@@ -4,7 +4,7 @@
 
 #include "CoresConsumption.h"
 
-CoresConsumption::CoresConsumption(int n)
+CoresConsumption::CoresConsumption(int n, const Rect& currentArea)
 {
     mach_msg_type_number_t count;
     processor_info_array_t coreInfo;
@@ -15,8 +15,11 @@ CoresConsumption::CoresConsumption(int n)
                         &count
     );
 
+    _area = currentArea;
     _number = n;
     _cores = (core_info_t*)malloc(sizeof(core_info_t) * _coreCount);
+
+    initializeShaderData();
 }
 
 CoresConsumption::~CoresConsumption()

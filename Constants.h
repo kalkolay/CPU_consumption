@@ -10,3 +10,5 @@
 #define HEIGHT 300
 
 #define MAX_BUFFER_LENGTH 512
+
+#define STEPS_INTERVAL 40
