@@ -5,9 +5,16 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(CPU_consumption
         main.cpp
-        Constants.h
-        Shader.cpp
-        Shader.h BaseWorker.cpp BaseWorker.h TotalConsumption.cpp TotalConsumption.h CoresConsumption.cpp CoresConsumption.h Container.h)
+        CPU_consumption/Utilities/Constants.h
+        CPU_consumption/Shader/Shader.cpp
+        CPU_consumption/Shader/Shader.h
+        CPU_consumption/Consumption/BaseWorker.cpp
+        CPU_consumption/Consumption/BaseWorker.h
+        CPU_consumption/Consumption/TotalConsumption.cpp
+        CPU_consumption/Consumption/TotalConsumption.h
+        CPU_consumption/Consumption/CoresConsumption.cpp
+        CPU_consumption/Consumption/CoresConsumption.h
+        CPU_consumption/Utilities/Container.h CPU_consumption/Consumption/ConsumptionManager.cpp CPU_consumption/Consumption/ConsumptionManager.h)
 
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)

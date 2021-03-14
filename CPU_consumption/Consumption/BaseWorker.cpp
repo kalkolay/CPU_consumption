@@ -4,14 +4,22 @@
 
 #include "BaseWorker.h"
 
+/*! \file
+ *  This source defines BaseWorker class
+ */
+
 #include <unistd.h>
 #include <pthread.h>
 
 BaseWorker::BaseWorker()
-    : _coordOnPoint(5), _steps(10), _currentInterval(0), _stopPush(false), points()
+    : _coordOnPoint   (5)
+    , _steps          (10)
+    , _currentInterval(0)
+    , _stopPush       (false)
+    , _points         ()
 {
     for (size_t i = 0; i < STEPS_INTERVAL; ++i)
-        points[i] = 0;
+        _points[i] = 0;
 }
 
 void BaseWorker::initializeShaderData()
@@ -20,10 +28,7 @@ void BaseWorker::initializeShaderData()
     GLsizeiptr size = (_countGridPoints + STEPS_INTERVAL) * _coordOnPoint * sizeof(GLfloat);
     auto* vertices = new GLfloat[(_countGridPoints + STEPS_INTERVAL) * _coordOnPoint]();
 
-    GLfloat gridColor[3] =
-            {
-                    217.0 / 0xff, 234.0 / 0xff, 244.0 / 0xff
-            };
+    GLfloat gridColor[3] = { 217.0 / 0xff, 234.0 / 0xff, 244.0 / 0xff };
 
     bool direction = false;
 
@@ -77,7 +82,8 @@ void BaseWorker::initializeShaderData()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, _coordOnPoint * sizeof(GLfloat), (GLvoid*)nullptr);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, _coordOnPoint * sizeof(GLfloat), (GLvoid*)(2 * sizeof(GLfloat)));
+    glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, _coordOnPoint * sizeof(GLfloat),
+                          (GLvoid*)(2 * sizeof(GLfloat)) );
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
@@ -87,7 +93,7 @@ void BaseWorker::draw(Shader* shader)
 {
     update();
 
-    shader->Use();
+    shader->use();
     glBindVertexArray(VAO);
     glDrawArrays(GL_LINE_STRIP, 0, _countGridPoints);
     glDrawArrays(GL_LINE_STRIP, _countGridPoints, _currentInterval);
@@ -103,9 +109,10 @@ void BaseWorker::update()
 
     for (size_t i = 0; i < _currentInterval; ++i)
     {
-        mapBuffer[(i + _countGridPoints) * _coordOnPoint + 1] = _area.top + (1.0f - (points[i]) / 100.0f) * _area.height;
-        mapBuffer[(i + _countGridPoints) * _coordOnPoint + 2] = points[i] / 100.0f;
-        mapBuffer[(i + _countGridPoints) * _coordOnPoint + 3] = 1.0f - points[i] / 100.0f;
+        mapBuffer[(i + _countGridPoints) * _coordOnPoint + 1] = _area.top
+                + (1.0f - (_points[i]) / 100.0f) * _area.height;
+        mapBuffer[(i + _countGridPoints) * _coordOnPoint + 2] = _points[i] / 100.0f;
+        mapBuffer[(i + _countGridPoints) * _coordOnPoint + 3] = 1.0f - _points[i] / 100.0f;
     }
 
     glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -127,12 +134,12 @@ void* BaseWorker::staticThreadStart(void* Param)
         if (_currentInterval > STEPS_INTERVAL - 1)
         {
             for (size_t i = 1; i < STEPS_INTERVAL; ++i)
-                points[i - 1] = points[i];
+                _points[i - 1] = _points[i];
 
             _stopPush = true;
         }
 
-        points[_currentInterval - 1] = getCurrentValue();
+        _points[_currentInterval - 1] = getCurrentValue();
 
         usleep(500000);
     }

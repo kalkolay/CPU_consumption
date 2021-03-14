@@ -4,11 +4,18 @@
 
 #include "Shader.h"
 
+/*! \file
+ *  This source defines Shader class
+ */
+
 #include <iostream>
 
 Shader::Shader(GLfloat* projectionMatrix)
     : _projectionMatrix(projectionMatrix)
 {
+    /*! \brief
+     *  Vertex shader source code
+     */
     const GLchar* vShaderCode = "#version 330 core\n"
                                 "layout (location = 0) in vec2 position;\n"
                                 "layout (location = 1) in vec3 color;\n"
@@ -20,6 +27,9 @@ Shader::Shader(GLfloat* projectionMatrix)
                                 "   gl_Position = uProjectionMatrix*(vec4(position, 0, 1.0));\n"
                                 "}\0";
 
+    /*! \brief
+     *  Fragment shader source code
+     */
     const GLchar* fShaderCode = "#version 330 core\n"
                                 "in vec3 ourColor;\n"
                                 "out vec4 color;\n"
@@ -67,7 +77,7 @@ Shader::Shader(GLfloat* projectionMatrix)
     glDeleteShader(fragment);
 }
 
-void Shader::Use() const
+void Shader::use() const
 {
     glUseProgram(_program);
 

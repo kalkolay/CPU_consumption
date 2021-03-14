@@ -4,10 +4,15 @@
 
 #include "TotalConsumption.h"
 
+/*! \file
+ *  This source defines TotalConsumption class
+ */
+
 #include <mach/mach.h>
 
 TotalConsumption::TotalConsumption(const struct Rect& currentArea)
-    : _previousIdleTicks(0), _previousTotalTicks(0)
+    : _previousIdleTicks (0)
+    , _previousTotalTicks(0)
 {
     _area = currentArea;
 

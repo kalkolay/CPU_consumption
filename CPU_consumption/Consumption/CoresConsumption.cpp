@@ -4,7 +4,12 @@
 
 #include "CoresConsumption.h"
 
-CoresConsumption::CoresConsumption(int n, const Rect& currentArea)
+/*! \file
+ *  This source defines CoresConsumption class
+ */
+
+CoresConsumption::CoresConsumption(int         n,
+                                   const Rect& currentArea)
 {
     mach_msg_type_number_t count;
     processor_info_array_t coreInfo;
