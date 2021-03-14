@@ -4,9 +4,11 @@
 
 ## Description
 
-CPU consumption monitor is a C++ desktop application with OpenGL API (GLFW/GLEW) on Mac OS. This project shows CPU load curves (total and by cores). The UI, which is implemented via shaders, is rather primitive and similar to Task Manager (default Windows application).
+CPU consumption monitor is a C++ desktop application with OpenGL API (GLFW/GLEW) on Mac OS. This project shows CPU load curves (total and by cores).\
+The UI, which is implemented via shaders, is rather primitive and similar to Task Manager (default Windows application).
 
-Sample usage:\
+Sample usage:
+
 <a href="https://ibb.co/BywtRKW"><img src="https://i.ibb.co/2v5yBYV/demonstration.png" alt="demonstration" border="0" /></a>
 
 You can see total CPU consumption on the left and CPU consumption per each core on the right (cores are displayed from left to right). 
