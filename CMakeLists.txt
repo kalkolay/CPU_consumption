@@ -3,6 +3,9 @@ PROJECT(CPU_consumption)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(glfw3_DIR ${CMAKE_SOURCE_DIR/3rdParties/glfw})
+set(GLEW_DIR ${CMAKE_SOURCE_DIR/3rdParties/glew})
+
 add_executable(CPU_consumption
                main.cpp
                CPU_consumption/Utilities/Constants.h
@@ -18,7 +21,7 @@ add_executable(CPU_consumption
                CPU_consumption/Consumption/ConsumptionManager.cpp
                CPU_consumption/Consumption/ConsumptionManager.h)
 
-find_package(glfw3 REQUIRED PATHS ${CMAKE_SOURCE_DIR/3rdParties/glfw})
-find_package(GLEW REQUIRED PATHS ${CMAKE_SOURCE_DIR/3rdParties/glew})
+find_package(glfw3 REQUIRED)
+find_package(GLEW REQUIRED)
 
 target_link_libraries(CPU_consumption glfw GLEW::glew)
