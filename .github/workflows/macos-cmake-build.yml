@@ -7,21 +7,7 @@ on:
 jobs:
   build-and-test:
 
-    name: ${{ matrix.toolchain }}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        toolchain:
-          - macos-clang
-
-        configuration:
-          - Debug
-
-        include:
-          - toolchain: macos-clang
-            os: macos-latest
-            compiler: clang
+    runs-on: macos-latest
 
     steps:
     - name: Checkout Code
@@ -29,20 +15,8 @@ jobs:
       with:
           submodules: true
 
-    - name: Set up Homebrew
-      run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      
-    - name: Set up OpenGL libraries
-      run: brew install glfw3 && brew install glew
+    - name: Configure (Debug)
+      run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=Debug
 
-    - name: Configure (${{ matrix.configuration }})
-      run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
-
-    - name: Build with ${{ matrix.compiler }}
+    - name: Build with clang
       run: cmake --build build
-
-    - name: Test
-      working-directory: build
-      env:
-        CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest -C ${{ matrix.configuration }}
