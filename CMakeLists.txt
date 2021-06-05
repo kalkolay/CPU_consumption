@@ -2,9 +2,13 @@ cmake_minimum_required(VERSION 3.14)
 PROJECT(CPU_consumption)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "-framework Cocoa -framework IOKit -framework OpenGL")
 
-set(glfw3_DIR ${CMAKE_SOURCE_DIR/3rdParties/glfw})
-set(GLEW_DIR ${CMAKE_SOURCE_DIR/3rdParties/glew})
+set(GLEW_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/3rdParties/glew/2.2.0_1/include")
+set(GLFW_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/3rdParties/glfw/3.3.3/include")
+
+set(GLEW_LIBRARY     "${PROJECT_SOURCE_DIR}/3rdParties/glew/2.2.0_1/lib/libGLEW.a")
+set(GLFW_LIBRARY     "${PROJECT_SOURCE_DIR}/3rdParties/glfw/3.3.3/lib/libglfw3.a")
 
 add_executable(CPU_consumption
                main.cpp
@@ -21,7 +25,6 @@ add_executable(CPU_consumption
                CPU_consumption/Consumption/ConsumptionManager.cpp
                CPU_consumption/Consumption/ConsumptionManager.h)
 
-find_package(glfw3 REQUIRED)
-find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_DIR} ${GLFW_INCLUDE_DIR})
 
-target_link_libraries(CPU_consumption glfw GLEW::glew)
+target_link_libraries(CPU_consumption ${GLEW_LIBRARY} ${GLFW_LIBRARY})
