@@ -8,7 +8,11 @@
  *  This source defines CoresConsumption class
  */
 
-CoresConsumption::CoresConsumption(int         n,
+#include <algorithm>
+
+#include <mach/mach.h>
+
+CoresConsumption::CoresConsumption(int n,
                                    const Rect& currentArea)
 {
     mach_msg_type_number_t count;
@@ -45,17 +49,26 @@ double CoresConsumption::getCurrentValue()
                         (processor_info_array_t*)&coreInfo,
                         &count
     );
-    user = coreInfo[_number].cpu_ticks[CPU_STATE_USER] - _cores[_number].cpu_ticks[CPU_STATE_USER];
-    system = coreInfo[_number].cpu_ticks[CPU_STATE_SYSTEM] - _cores[_number].cpu_ticks[CPU_STATE_SYSTEM];
-    idle = coreInfo[_number].cpu_ticks[CPU_STATE_IDLE] - _cores[_number].cpu_ticks[CPU_STATE_IDLE];
-    nice = coreInfo[_number].cpu_ticks[CPU_STATE_NICE] - _cores[_number].cpu_ticks[CPU_STATE_NICE];
+
+#define CORES_CALCULATE_TICKS_DIFF(var, state) \
+        var = coreInfo[_number].cpu_ticks[state] - _cores[_number].cpu_ticks[state];
+
+    CORES_CALCULATE_TICKS_DIFF(user,   CPU_STATE_USER)
+    CORES_CALCULATE_TICKS_DIFF(system, CPU_STATE_SYSTEM)
+    CORES_CALCULATE_TICKS_DIFF(idle,   CPU_STATE_IDLE)
+    CORES_CALCULATE_TICKS_DIFF(nice,   CPU_STATE_NICE)
+
     used = user + system + nice;
     total = system + user + idle + nice;
     _cores[_number].usage = used / total;
-    _cores[_number].cpu_ticks[CPU_STATE_USER] = coreInfo[_number].cpu_ticks[CPU_STATE_USER];
-    _cores[_number].cpu_ticks[CPU_STATE_SYSTEM] = coreInfo[_number].cpu_ticks[CPU_STATE_SYSTEM];
-    _cores[_number].cpu_ticks[CPU_STATE_IDLE] = coreInfo[_number].cpu_ticks[CPU_STATE_IDLE];
-    _cores[_number].cpu_ticks[CPU_STATE_NICE] = coreInfo[_number].cpu_ticks[CPU_STATE_NICE];
 
-    return _cores[_number].usage > 1 ? 100 : _cores[_number].usage * 100;
+#define CORES_ASSIGN_CONSUMPTION_INFO(state) \
+        _cores[_number].cpu_ticks[state] = coreInfo[_number].cpu_ticks[state];
+
+    CORES_ASSIGN_CONSUMPTION_INFO(CPU_STATE_USER)
+    CORES_ASSIGN_CONSUMPTION_INFO(CPU_STATE_SYSTEM)
+    CORES_ASSIGN_CONSUMPTION_INFO(CPU_STATE_IDLE)
+    CORES_ASSIGN_CONSUMPTION_INFO(CPU_STATE_NICE)
+
+    return std::min(_cores[_number].usage * 100, 100.);
 }

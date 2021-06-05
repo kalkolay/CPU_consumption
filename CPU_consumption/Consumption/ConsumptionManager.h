@@ -22,9 +22,16 @@ class ConsumptionManager
 {
 public:
     /*! \brief
-     *  Initializes TotalConsumption and CoresConsumption arrays
+     *  Default constructor
+     *
+     *  Fills CPU consumption arrays and sets some OpenGL data for later drawing
      */
-    void init();
+    ConsumptionManager();
+
+    /*! \brief
+     *  Destructor
+     */
+    ~ConsumptionManager();
 
     /*! \brief
      *  Draws all info
@@ -44,5 +51,5 @@ private:
      *
      *  \note Required in init method
      */
-    static void ortho2dProjection(float*);
+    static float* calculateOrtho2dProjection(float*);
 };

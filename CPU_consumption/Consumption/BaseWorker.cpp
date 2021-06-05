@@ -12,11 +12,11 @@
 #include <pthread.h>
 
 BaseWorker::BaseWorker()
-    : _coordOnPoint   (5)
-    , _steps          (10)
-    , _currentInterval(0)
-    , _stopPush       (false)
-    , _points         ()
+    : _coordOnPoint   ( 5 )
+    , _steps          ( 10 )
+    , _currentInterval( 0 )
+    , _stopPush       ( false )
+    , _points         ( std::array<double, STEPS_INTERVAL>() )
 {
     for (size_t i = 0; i < STEPS_INTERVAL; ++i)
         _points[i] = 0;
@@ -28,7 +28,8 @@ void BaseWorker::initializeShaderData()
     GLsizeiptr size = (_countGridPoints + STEPS_INTERVAL) * _coordOnPoint * sizeof(GLfloat);
     auto* vertices = new GLfloat[(_countGridPoints + STEPS_INTERVAL) * _coordOnPoint]();
 
-    GLfloat gridColor[3] = { 217.0 / 0xff, 234.0 / 0xff, 244.0 / 0xff };
+    // Grid color in RGB
+    const GLfloat gridColor[3] = { 217.0 / 0xff, 234.0 / 0xff, 244.0 / 0xff };
 
     bool direction = false;
 
@@ -37,7 +38,7 @@ void BaseWorker::initializeShaderData()
         if (k % ((_steps + 1) * 2) == 0)
             k = 0;
 
-        if ((int)(i / ((_steps + 1) * 2)) == 0 )
+        if (i / ((_steps + 1) * 2) == 0)
         {
             vertices[i * _coordOnPoint] = _area.left + (_area.width / _steps) * (int)(i / 2);
             vertices[(i + (int)direction) * _coordOnPoint + 1] = _area.top + _area.height;
@@ -54,13 +55,10 @@ void BaseWorker::initializeShaderData()
             vertices[(i + 1) * _coordOnPoint + 1] = _area.top + (_area.height / _steps) * (int)((k + 1) / 2);
         }
 
-        vertices[i * _coordOnPoint + 2] = gridColor[0];
-        vertices[i * _coordOnPoint + 3] = gridColor[1];
-        vertices[i * _coordOnPoint + 4] = gridColor[2];
-
-        vertices[(i + 1) * _coordOnPoint + 2] = gridColor[0];
-        vertices[(i + 1) * _coordOnPoint + 3] = gridColor[1];
-        vertices[(i + 1) * _coordOnPoint + 4] = gridColor[2];
+        for (auto j = 0; j < 3; ++j)
+            vertices[i * _coordOnPoint + 2 + j] = gridColor[j];
+        for (auto j = 0; j < 3; ++j)
+            vertices[(i + 1) * _coordOnPoint + 2 + j] = gridColor[j];
 
         direction = !direction;
     }
@@ -71,6 +69,7 @@ void BaseWorker::initializeShaderData()
         vertices[(_countGridPoints + i) * _coordOnPoint + 4] = 0.0f;
     }
 
+    /// Initialize and activate VAO & VBO using OpenGL API
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
@@ -89,7 +88,7 @@ void BaseWorker::initializeShaderData()
     glBindVertexArray(0);
 }
 
-void BaseWorker::draw(Shader* shader)
+void BaseWorker::drawCurve(Shader* shader)
 {
     update();
 
@@ -118,7 +117,7 @@ void BaseWorker::update()
     glUnmapBuffer(GL_ARRAY_BUFFER);
 }
 
-void* BaseWorker::staticThreadStart(void* Param)
+void* BaseWorker::threadStartStatic(void* Param)
 {
     auto* This = (BaseWorker*)Param;
     This->threadStart();
@@ -141,7 +140,7 @@ void* BaseWorker::staticThreadStart(void* Param)
 
         _points[_currentInterval - 1] = getCurrentValue();
 
-        usleep(500000);
+        usleep(UPDATE_TIME);
     }
 }
 
@@ -150,5 +149,5 @@ void BaseWorker::start()
     pthread_t tid;
     pthread_attr_t attr;
     pthread_attr_init(&attr);
-    pthread_create(&tid, &attr, staticThreadStart, (void*)this);
+    pthread_create(&tid, &attr, threadStartStatic, (void*)this);
 }

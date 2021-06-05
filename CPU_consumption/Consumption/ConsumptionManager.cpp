@@ -8,7 +8,47 @@
  *  This source defines ConsumptionManager class
  */
 
-void ConsumptionManager::ortho2dProjection(float* mat)
+#include "../Utilities/Constants.h"
+
+ConsumptionManager::ConsumptionManager()
+    : numCPU( std::thread::hardware_concurrency() )
+    , shader( new Shader(projectionMatrix) )
+{
+    const BaseWorker::Rect totalConsumptionGraphSize = { 100, 100, 10, 10 };
+    graph = new TotalConsumption(totalConsumptionGraphSize);
+
+    if (!numCPU)
+        numCPU = 1;
+
+    graph2 = new CoresConsumption*[numCPU];
+
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glMatrixMode(GL_PROJECTION);
+
+    calculateOrtho2dProjection(projectionMatrix);
+
+    graph->start();
+
+    for (int i = 0; i < numCPU; ++i)
+    {
+        const BaseWorker::Rect coresConsumptionGraphSize = {50, 50, (double)(120 + i % 2 * 60),
+                                                            (double)(i / 2 * 70 + 10)};
+        graph2[i] = new CoresConsumption(i, coresConsumptionGraphSize);
+        graph2[i]->start();
+    }
+}
+
+ConsumptionManager::~ConsumptionManager()
+{
+    delete shader;
+    delete[] graph;
+    for (int i = 0; i < numCPU; ++i)
+        delete[] graph2[i];
+    delete[] graph2;
+    numCPU = 0;
+}
+
+float* ConsumptionManager::calculateOrtho2dProjection(float* projectionMatrix)
 {
     // this is basically from
     const float zNear = -1.0f;
@@ -18,52 +58,30 @@ void ConsumptionManager::ortho2dProjection(float* mat)
     const float inv_x = 1.0f / WIDTH;
 
     //first column
-    *mat++ = 2.0f * inv_x;
-    *mat++ = 0.0f;
-    *mat++ = 0.0f;
-    *mat++ = 0.0f;
+    *projectionMatrix++ = 2.0f * inv_x;
+    *projectionMatrix++ = 0.0f;
+    *projectionMatrix++ = 0.0f;
+    *projectionMatrix++ = 0.0f;
 
     //second
-    *mat++ = 0.0f;
-    *mat++ = 2.0f * inv_y;
-    *mat++ = 0.0f;
-    *mat++ = 0.0f;
+    *projectionMatrix++ = 0.0f;
+    *projectionMatrix++ = 2.0f * inv_y;
+    *projectionMatrix++ = 0.0f;
+    *projectionMatrix++ = 0.0f;
 
     //third
-    *mat++ = 0.0f;
-    *mat++ = 0.0f;
-    *mat++ = -2.0f * inv_z;
-    *mat++ = 0.0f;
+    *projectionMatrix++ = 0.0f;
+    *projectionMatrix++ = 0.0f;
+    *projectionMatrix++ = -2.0f * inv_z;
+    *projectionMatrix++ = 0.0f;
 
     //fourth
-    *mat++ = -WIDTH * inv_x;
-    *mat++ = -HEIGHT * inv_y;
-    *mat++ = -(zFar + zNear) * inv_z;
-    *mat = 1.0f;
-}
+    *projectionMatrix++ = -WIDTH * inv_x;
+    *projectionMatrix++ = -HEIGHT * inv_y;
+    *projectionMatrix++ = -(zFar + zNear) * inv_z;
+    *projectionMatrix = 1.0f;
 
-void ConsumptionManager::init()
-{
-    glClearColor(1.0, 1.0, 1.0, 1.0);
-    glMatrixMode(GL_PROJECTION);
-
-    ortho2dProjection(projectionMatrix);
-
-    shader = new Shader(projectionMatrix);
-
-    graph = new TotalConsumption({ 100, 100, 10, 10 });
-    graph->start();
-
-    numCPU = std::thread::hardware_concurrency() > 0 ? std::thread::hardware_concurrency() : 1;
-
-    graph2 = new CoresConsumption*[numCPU];
-
-    for (int i = 0; i < numCPU; ++i)
-    {
-        graph2[i] = new CoresConsumption( i, {50, 50, (double)(120 + i % 2 * 60),
-                                              (double)(i / 2 * 70 + 10)} );
-        graph2[i]->start();
-    }
+    return projectionMatrix;
 }
 
 void ConsumptionManager::draw()
@@ -72,10 +90,10 @@ void ConsumptionManager::draw()
 
     glPointSize(3.0);
 
-    graph->draw(shader);
+    graph->drawCurve(shader);
 
     for (size_t i = 0; i < numCPU; ++i)
-        graph2[i]->draw(shader);
+        graph2[i]->drawCurve(shader);
 
     glFlush();
 }

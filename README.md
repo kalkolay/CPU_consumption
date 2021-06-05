@@ -15,14 +15,13 @@ You can see total CPU consumption on the left and CPU consumption per each core 
 
 ## Functional features
 - The curves use different colors depending on the degree of load (for example, the peak load range is red);
-- A self-written container is used to store the graphs data;
 - Memory for the curves data is allocated once during the launch of the application;
 - Each curve is updated in a separate thread (including the general one). Threads are also created once by means of the operating system when the application is launched;
 - The class that updates a specific curve inherits from the base Worker interface;
 - The CPU consumption data is taken from Mach API;
 - Shaders are written on GLSL (version 330 core).
 
-Built using C++17 standard but may be also built on C++11, C++14 and C++20.
+Built using C++17 standard on *arm64*.
 
 ## License
 

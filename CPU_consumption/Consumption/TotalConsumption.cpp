@@ -22,12 +22,12 @@ TotalConsumption::TotalConsumption(const struct Rect& currentArea)
 float TotalConsumption::calculate(unsigned long long idleTicks,
                                   unsigned long long totalTicks)
 {
-    unsigned long long totalTicksSinceLastTime = totalTicks - _previousTotalTicks;
-    unsigned long long idleTicksSinceLastTime  = idleTicks  - _previousIdleTicks;
-    float ans = 1.0f -
-                (totalTicksSinceLastTime > 0 ?
-                static_cast<float>(idleTicksSinceLastTime) / totalTicksSinceLastTime :
-                0);
+    auto totalTicksSinceLastTime = totalTicks - _previousTotalTicks;
+    auto idleTicksSinceLastTime  = idleTicks  - _previousIdleTicks;
+    float diff = static_cast<float>(idleTicksSinceLastTime) / totalTicksSinceLastTime;
+    float ans = 1.0f;
+    if (totalTicksSinceLastTime > 0)
+        ans -= diff;
     _previousTotalTicks = totalTicks;
     _previousIdleTicks  = idleTicks;
     return ans * 100;

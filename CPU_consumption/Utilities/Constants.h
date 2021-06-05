@@ -31,6 +31,13 @@
 #define MAX_BUFFER_LENGTH 512
 
 /*! \brief
- *  Graphical update interval size
+ *  Graphical update time (in ms)
+ */
+#define UPDATE_TIME 500000
+
+/*! \brief
+ *  Graphical update interval size (points per update time)
+ *
+ *  \see UPDATE_TIME
  */
 #define STEPS_INTERVAL    40

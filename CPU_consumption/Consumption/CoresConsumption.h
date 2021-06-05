@@ -34,8 +34,8 @@ public:
      *  \param Core number
      *  \param Size of graph
      */
-    explicit CoresConsumption(int,
-                              const Rect&);
+    CoresConsumption(int,
+                     const Rect&);
     /*! \brief
      *  Destructor
      */

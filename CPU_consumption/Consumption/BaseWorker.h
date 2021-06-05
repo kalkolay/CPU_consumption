@@ -4,12 +4,14 @@
 
 #pragma once
 
-#include "../Utilities/Container.h"
+#include "../Utilities/Constants.h"
 #include "../Shader/Shader.h"
 
 /*! \file
  *  This header declares BaseWorker class
  */
+
+#include <array>
 
 /*! \class
  *  Abstract base class for displaying graphs
@@ -34,7 +36,7 @@ public:
      *  Method to display graphs
      *  \param Pointer to the object of Shader class
      */
-    void draw(Shader*);
+    void drawCurve(Shader *shader);
 
     /*! \brief
      *  Inits and runs pthreads
@@ -52,22 +54,28 @@ private:
     int  _coordOnPoint;
     int  _steps;
     int  _currentInterval;
-    bool _stopPush;
+    bool _stopPush;        // Indicates when we have to stop incrementing _currentInterval
 
+    /*! \brief
+     *  Vertex array & buffer objects.
+     *
+     *  \see https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Array_Object
+     *  \see https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Buffer_Object
+     */
     GLuint VBO;
     GLuint VAO;
 
-    Container<double, STEPS_INTERVAL> _points;
+    std::array<double, STEPS_INTERVAL> _points;
 
     /*! \brief
-     *  Helper method for draw function to update info
+     *  Helper method for drawCurve function to update info
      */
     void update();
 
     /*! \brief
      *  Helper methods to call start function
      */
-    static void* staticThreadStart(void*);
+    static void* threadStartStatic(void*);
     [[noreturn]] void threadStart();
 
 protected:
@@ -78,4 +86,3 @@ protected:
      */
     void initializeShaderData();
 };
-

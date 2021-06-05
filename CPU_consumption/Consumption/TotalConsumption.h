@@ -33,7 +33,7 @@ private:
     unsigned long long _previousIdleTicks;
 
     /*! \brief
-     *  Helper method to calculate total CPU consumption
+     *  Helper method to calculate total CPU consumption (in %)
      *  \param Idle CPU ticks
      *  \param Total CPU ticks
      *  \return Total CPU load percentage

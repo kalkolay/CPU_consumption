@@ -14,9 +14,9 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, true);
 
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, false);
 
     GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT,
                                           "CPU consumption monitor", nullptr, nullptr);
@@ -30,13 +30,12 @@ int main()
 
     glfwMakeContextCurrent(window);
 
-    glewExperimental = GL_TRUE;
+    glewExperimental = true;
 
     if (glewInit() != GLEW_OK)
         return EXIT_FAILURE;
 
     std::unique_ptr<ConsumptionManager> manager( new ConsumptionManager() );
-    manager->init();
 
     while ( !glfwWindowShouldClose(window) )
     {
