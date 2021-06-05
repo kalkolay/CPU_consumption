@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 PROJECT(CPU_consumption)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-framework Cocoa -framework IOKit -framework OpenGL")
+set(CMAKE_CXX_FLAGS "-target arm64-apple-macos11 -framework Cocoa -framework IOKit -framework OpenGL")
 
 set(GLEW_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/3rdParties/glew/2.2.0_1/include")
 set(GLFW_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/3rdParties/glfw/3.3.3/include")
