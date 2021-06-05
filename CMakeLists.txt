@@ -15,7 +15,6 @@ set(LIBRARIES        ${GLEW_LIBRARY} ${GLFW_LIBRARY})
 add_executable(CPU_consumption
                main.cpp
                CPU_consumption/Utilities/Constants.h
-               CPU_consumption/Utilities/Container.h
                CPU_consumption/Shader/Shader.cpp
                CPU_consumption/Shader/Shader.h
                CPU_consumption/Consumption/BaseWorker.cpp
