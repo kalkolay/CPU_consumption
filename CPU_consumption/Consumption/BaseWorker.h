@@ -51,10 +51,11 @@ public:
 
 private:
     int  _countGridPoints;
-    int  _coordOnPoint;
-    int  _steps;
     int  _currentInterval;
     bool _stopPush;        // Indicates when we have to stop incrementing _currentInterval
+
+    const int _coordOnPoint = 5;   // Coefficient for displaying points
+    const int _steps        = 10;  // Number of cells on both horizontal and vertical sides of the graph
 
     /*! \brief
      *  Vertex array & buffer objects.
@@ -66,6 +67,11 @@ private:
     GLuint VAO;
 
     std::array<double, STEPS_INTERVAL> _points;
+
+    /*! \brief
+     *  Helper method for filling the vertices array
+     */
+    inline void fillVertices(GLfloat*, int);
 
     /*! \brief
      *  Helper method for drawCurve function to update info

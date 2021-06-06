@@ -12,9 +12,7 @@
 #include <pthread.h>
 
 BaseWorker::BaseWorker()
-    : _coordOnPoint   ( 5 )
-    , _steps          ( 10 )
-    , _currentInterval( 0 )
+    : _currentInterval( 0 )
     , _stopPush       ( false )
     , _points         ( std::array<double, STEPS_INTERVAL>() )
 {
@@ -22,14 +20,22 @@ BaseWorker::BaseWorker()
         _points[i] = 0;
 }
 
+inline void BaseWorker::fillVertices(GLfloat* vertices, int i)
+{
+    // Grid color in RGB
+    const GLfloat gridColor[3] = { 217.0 / 0xff, 234.0 / 0xff, 244.0 / 0xff };
+
+    for (auto j = 0; j < 3; ++j)
+        vertices[i * _coordOnPoint + 2 + j] = gridColor[j];
+    for (auto j = 0; j < 3; ++j)
+        vertices[(i + 1) * _coordOnPoint + 2 + j] = gridColor[j];
+}
+
 void BaseWorker::initializeShaderData()
 {
     _countGridPoints = (_steps + 1) * 4;
     GLsizeiptr size = (_countGridPoints + STEPS_INTERVAL) * _coordOnPoint * sizeof(GLfloat);
     auto* vertices = new GLfloat[(_countGridPoints + STEPS_INTERVAL) * _coordOnPoint]();
-
-    // Grid color in RGB
-    const GLfloat gridColor[3] = { 217.0 / 0xff, 234.0 / 0xff, 244.0 / 0xff };
 
     bool direction = false;
 
@@ -55,10 +61,7 @@ void BaseWorker::initializeShaderData()
             vertices[(i + 1) * _coordOnPoint + 1] = _area.top + (_area.height / _steps) * (int)((k + 1) / 2);
         }
 
-        for (auto j = 0; j < 3; ++j)
-            vertices[i * _coordOnPoint + 2 + j] = gridColor[j];
-        for (auto j = 0; j < 3; ++j)
-            vertices[(i + 1) * _coordOnPoint + 2 + j] = gridColor[j];
+        fillVertices(vertices, i);
 
         direction = !direction;
     }
