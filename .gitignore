@@ -23,8 +23,11 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.a
 *.lib
+
+# CMake & CLion generated files
+cmake-build-debug/
+.idea/
 
 # Executables
 *.exe
